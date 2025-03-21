@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Image Slider</title>
+  <style>
+    body {
+      background-color: rgb(14, 13, 13);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* Align content to the top */
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container .slider {
+      position: absolute;
+      width: 200px;
+      height: 250px;
+      top: 20%; /* Move the slider closer to the top */
+      left: 50%;
+      transform-style: preserve-3d;
+      transform: translate(-50%, -50%) perspective(1000px) rotateX(-30deg); /* Tilt upwards */
+      animation: autoRun 20s linear infinite;
+    }
+
+    @keyframes autoRun {
+      from {
+        transform: translate(-50%, -50%) perspective(1000px) rotateX(-8deg) rotateY(0deg);
+      }
+      to {
+        transform: translate(-50%, -50%) perspective(1000px) rotateX(-10deg) rotateY(360deg);
+      }
+    }
+
+    .slider .item {
+      position: absolute;
+      inset: 0;
+      transform: rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(400px); /* Adjust translateZ */
+      transition: transform 0.5s ease, scale 0.5s ease;
+      transform-origin: center;
+    }
+
+    .slider .item img {
+      width: 85%;
+      height: 90%;
+      object-fit: cover;
+      border-radius: 10px;
+      transition: transform 0.5s ease;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="container" style="--quantity:6">
+    <div class="slider">
+      <div class="item" style="--position:1"><img src="/z/img1.jpg" alt="Image 1"></div>
+      <div class="item" style="--position:2"><img src="/z/img2.jpg" alt="Image 2"></div>
+      <div class="item" style="--position:3"><img src="/z/img3.jpg" alt="Image 3"></div>
+      <div class="item" style="--position:4"><img src="/z/img4.jpg" alt="Image 4"></div>
+      <div class="item" style="--position:5"><img src="/z/img5.jpg" alt="Image 5"></div>
+      <div class="item" style="--position:6"><img src="/z/img6.jpg" alt="Image 6"></div>
+    </div>
+  </div>
+
+</body>
+</html>
