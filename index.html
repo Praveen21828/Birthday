@@ -1,85 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Analog Clock</title>
+
   <style>
+    /* === Basic page setup === */
     body {
       margin: 0;
       padding: 0;
-      display: flex;
+      display: flex;                      
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #1e1e1e;
-      color: white;
+      align-items: center;                
+      height: 100vh;                      
+      background: radial-gradient(circle, #2c3e50, #000000);
       font-family: 'Arial', sans-serif;
     }
 
+    /* === Clock container === */
     .clock {
       position: relative;
       width: 300px;
       height: 300px;
-      border: 10px solid #fff;
-      border-radius: 50%;
-      background: #333;
+      border: 10px solid #7fbdbd;           
+      background: #272727;                 
+      border-radius: 50%;                
     }
 
+    /* === Hour numbers === */
     .number {
       position: absolute;
       font-size: 20px;
       font-weight: bold;
-      color: #fff;
+      color: #1abc9c;
+      text-shadow: 1px 1px 3px #000;
       transform: translate(-50%, -50%);
     }
 
-    /* Corrected number positions */
-    .number1 { top: 19%; left: 75%; }
-    .number2 { top: 30%; left: 88%; }
-    .number3 { top: 50%; left: 93%; }
-    .number4 { top: 70%; left: 88%; }
-    .number5 { top: 81%; left: 75%; }
-    .number6 { top: 86%; left: 50%; }
-    .number7 { top: 81%; left: 25%; }
-    .number8 { top: 70%; left: 12%; }
-    .number9 { top: 50%; left: 7%; }
-    .number10 { top: 30%; left: 12%; }
-    .number11 { top: 19%; left: 25%; }
-    .number12 { top: 12%; left: 50%; }
-
+    /* === Common hand styling === */
     .hand {
       position: absolute;
       bottom: 50%;
       left: 50%;
-      transform-origin: bottom;
-      background-color: white;
-      border-radius: 5px;
+      transform-origin: bottom;          
+      transform: rotate(0deg);
+      border-radius: 6px;
     }
 
+    /* === Hour hand === */
     .hour {
-      width: 6px;
+      width: 4px;
       height: 70px;
-      background-color: #ff5733;
+      background: linear-gradient(to top, #2980b9, #3498db);
     }
 
+    /* === Minute hand === */
     .minute {
       width: 4px;
       height: 90px;
-      background-color: #33b5ff;
+      background: linear-gradient(to top, #5dade2, #85c1ae); 
     }
 
+    /* === Second hand === */
     .second {
       width: 2px;
-      height: 100px;
-      background-color: #fbc02d;
+      height: 110px;
+      background: linear-gradient(to top, #8e44ad, #9b59b6);  
+      box-shadow: 0 0 10px rgba(142, 68, 173, 0.7);   
     }
 
+    /* === Center dot === */
     .center {
       position: absolute;
-      width: 12px;
-      height: 12px;
-      background-color: #fff;
+      width: 10px;
+      height: 10px;
+      background: #ffffff;
+      border: 1.5px solid #2980b9; /* Ocean blue border */
       border-radius: 50%;
       top: 50%;
       left: 50%;
@@ -88,51 +85,67 @@
   </style>
 </head>
 <body>
-  <div class="clock">
-    <div class="hand hour" id="hour"></div>
-    <div class="hand minute" id="minute"></div>
-    <div class="hand second" id="second"></div>
-    <div class="center"></div>
-    <div class="number number1">1</div>
-    <div class="number number2">2</div>
-    <div class="number number3">3</div>
-    <div class="number number4">4</div>
-    <div class="number number5">5</div>
-    <div class="number number6">6</div>
-    <div class="number number7">7</div>
-    <div class="number number8">8</div>
-    <div class="number number9">9</div>
-    <div class="number number10">10</div>
-    <div class="number number11">11</div>
-    <div class="number number12">12</div>
+
+  <!-- === Clock face container === -->
+
+  <div class="clock" id="clock">
+    <div class="hand hour" id="hour"></div>     
+    <div class="hand minute" id="minute"></div>  
+    <div class="hand second" id="second"></div> 
+    <div class="center"></div>                 
   </div>
 
   <script>
-    const targetHour = 23; // Set the hour manually
-    const targetMinute =46; // Set the minute manually
+    const clock = document.getElementById('clock');
+
+    // === Dynamically add numbers (1–12) to the clock face ===
+
+    for (let i = 1; i <= 12; i++) {
+      const angle = (i * 30) * (Math.PI / 180); // Convert to radians
+      const radius = 130;                       // Distance from center
+      const x = 150 + radius * Math.sin(angle); // X coordinate
+      const y = 150 - radius * Math.cos(angle); // Y coordinate
+
+      const number = document.createElement('div');
+      number.className = 'number';
+      number.style.left = `${x}px`;
+      number.style.top = `${y}px`;
+      number.textContent = i;                   // Set clock number
+      clock.appendChild(number);
+    }
+
+    // === Target time to trigger redirect ===
+
+    const targetHour = 11;
+    const targetMinute = 22;
+    ;
+
+    // === Update clock hands every second ===
 
     function updateClock() {
       const now = new Date();
-      const hours = now.getHours() % 12;
+      const hours = now.getHours() % 12;            // 12-hour format
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
 
-      const hourDeg = (hours * 30) + (minutes * 0.5); 
-      const minuteDeg = (minutes * 6) + (seconds * 0.1);
-      const secondDeg = seconds * 6;
+      const hourDeg = (hours * 30) + (minutes * 0.5);       // Hour rotation
+      const minuteDeg = (minutes * 6) + (seconds * 0.1);    // Minute rotation
+      const secondDeg = seconds * 6;                        // Second rotation
 
+      // Apply rotation to each hand
       document.getElementById('hour').style.transform = `rotate(${hourDeg}deg)`;
       document.getElementById('minute').style.transform = `rotate(${minuteDeg}deg)`;
       document.getElementById('second').style.transform = `rotate(${secondDeg}deg)`;
 
-      // Check if it's time to redirect
-      if (hours === (targetHour % 12) && minutes === targetMinute) {
-        window.location.href = "page2.html"; // Redirect to surprise page
+      // === Redirect if current time is 10:37 ===
+      if (now.getHours() === targetHour && now.getMinutes() === targetMinute) {
+        window.location.href = "page2.html";
       }
     }
 
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(updateClock, 1000); 
+    updateClock();                  
   </script>
 </body>
 </html>
+
